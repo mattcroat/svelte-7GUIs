@@ -1,0 +1,50 @@
+@import 'open-props/style';
+@import 'open-props/normalize';
+@import 'open-props/buttons';
+
+@import url(https://fonts.bunny.net/css?family=manrope:400,600,800);
+
+body {
+	display: grid;
+	place-content: center;
+	font-family: 'Manrope', sans-serif;
+	/* place-content: center; */
+}
+
+.container {
+	--width: auto;
+	max-width: var(--width);
+	margin-inline: auto;
+	text-align: center;
+}
+
+/* input:not([class]) {
+	max-width: 100px;
+} */
+
+/* input {
+	min-width: 100%;
+	max-width: 100%;
+} */
+
+.space * + * {
+	--spacing: 0.5em;
+	margin-block-start: var(--spacing);
+}
+
+.screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+select,
+input {
+	width: 100%;
+}
