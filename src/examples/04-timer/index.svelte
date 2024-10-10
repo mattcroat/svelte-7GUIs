@@ -6,7 +6,7 @@
 		if (duration === 0) return
 
 		const interval = setInterval(() => {
-			console.log("yo")
+			console.log('yo')
 			if (elapsed < duration) {
 				elapsed += 0.1
 			} else if (elapsed > duration) {
@@ -18,7 +18,7 @@
 	})
 </script>
 
-<div class="space" style="width: max-content; margin-inline: auto;">
+<div>
 	<label>
 		<span>Elapsed time:</span>
 		<progress max={duration} value={elapsed}></progress>

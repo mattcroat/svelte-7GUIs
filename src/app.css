@@ -4,35 +4,60 @@
 
 @import url(https://fonts.bunny.net/css?family=manrope:400,600,800);
 
+:root {
+	--background-clr: var(--gray-10);
+	--text-1: var(--gray-1);
+	--surface-1: var(--gray-10);
+	--surface-2: var(--gray-9);
+}
+
 body {
 	display: grid;
 	place-content: center;
 	font-family: 'Manrope', sans-serif;
-	/* place-content: center; */
+	background-color: var(--surface-1);
 }
 
-.container {
-	--width: auto;
-	max-width: var(--width);
-	margin-inline: auto;
-	text-align: center;
+select,
+input {
+	width: 100%;
+	background-color: var(--surface-3);
 }
 
-/* input:not([class]) {
-	max-width: 100px;
-} */
-
-/* input {
-	min-width: 100%;
-	max-width: 100%;
-} */
-
-.space * + * {
-	--spacing: 0.5em;
-	margin-block-start: var(--spacing);
+input[disabled] {
+	background-color: var(--surface-2);
 }
 
-.screen-reader-text {
+.surface-2 {
+	color: var(--text-1);
+	background-color: var(--surface-2);
+	box-shadow: var(--shadow-2);
+	border-radius: var(--radius-2);
+}
+
+.flex-gap {
+	--gap: 0.5rem;
+	display: flex;
+	gap: var(--gap);
+}
+
+.grid-gap {
+	--gap: 0.5rem;
+	display: grid;
+	gap: var(--gap);
+}
+
+.space-x > * + * {
+	--gap: 0.5rem;
+	margin-block-start: var(--gap);
+}
+
+.space-y > * + * {
+	--gap: 0.5rem;
+	margin-inline-start: var(--gap);
+}
+
+.sr-only {
 	position: absolute;
 	width: 1px;
 	height: 1px;
@@ -42,9 +67,4 @@ body {
 	clip: rect(0, 0, 0, 0);
 	white-space: nowrap;
 	border-width: 0;
-}
-
-select,
-input {
-	width: 100%;
 }

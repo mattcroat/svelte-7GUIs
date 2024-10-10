@@ -5,9 +5,9 @@
 	}
 
 	let people = $state([
-		{ name: 'Rich', surname: 'Harris' },
-		{ name: 'Ryan', surname: 'Carniato' },
-		{ name: 'Evan', surname: 'You' },
+		{ name: 'Hans', surname: 'Emil' },
+		{ name: 'Max', surname: 'Mustermann' },
+		{ name: 'Roman', surname: 'Tisch' },
 	])
 
 	let prefix = $state('')
@@ -44,16 +44,16 @@
 	}
 </script>
 
-<div class="crud">
+<div class="container surface-2">
 	<div class="search">
-		<label>
+		<label class="group">
 			<span>Filter prefix:</span>
 			<input type="text" bind:value={prefix} />
 		</label>
 	</div>
 
 	<label class="people">
-		<span class="screen-reader-text">Names:</span>
+		<span class="sr-only">Names:</span>
 		<select bind:value={selected} size="5">
 			{#each filteredPeople as user}
 				<option value={user}>{user.surname}, {user.name}</option>
@@ -62,18 +62,18 @@
 	</label>
 
 	<div class="details">
-		<label>
+		<label class="group">
 			<span>Name:</span>
 			<input type="text" bind:value={person.name} />
 		</label>
 
-		<label>
+		<label class="group">
 			<span>Surname:</span>
 			<input type="text" bind:value={person.surname} />
 		</label>
 	</div>
 
-	<div class="actions">
+	<div class="actions space-y">
 		<button onclick={createPerson}>Create</button>
 		<button onclick={updatePerson}>Update</button>
 		<button onclick={deletePerson}>Delete</button>
@@ -81,7 +81,7 @@
 </div>
 
 <style>
-	.crud {
+	.container {
 		width: 500px;
 		display: grid;
 		grid-template-areas:
@@ -92,14 +92,11 @@
 		grid-auto-rows: auto;
 		gap: 1rem;
 		padding: 1rem;
-		background-color: var(--gray-8);
-		box-shadow: var(--shadow-2);
-		border-radius: var(--radius-2);
 
 		.search {
 			grid-area: search;
 
-			label {
+			.group {
 				display: grid;
 				grid-template-columns: 2fr 1fr;
 				align-items: baseline;
@@ -118,7 +115,7 @@
 			align-items: baseline;
 			gap: 0.5rem;
 
-			label {
+			.group {
 				display: contents;
 			}
 		}

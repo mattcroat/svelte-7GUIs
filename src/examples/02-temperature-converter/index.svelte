@@ -25,7 +25,13 @@
 	const temperature = new Temperature()
 </script>
 
-<div class="container">
+<div>
 	<input type="number" bind:value={temperature.c} /> Celsius =
 	<input type="number" bind:value={temperature.f} /> Fahrenheit
 </div>
+
+<style>
+	input[type='number'] {
+		max-width: 10ch;
+	}
+</style>
