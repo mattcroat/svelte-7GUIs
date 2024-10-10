@@ -47,6 +47,13 @@ input[disabled] {
 	gap: var(--gap);
 }
 
+.flex-center {
+	--gap: 0.5rem;
+	display: flex;
+	place-content: center;
+	gap: var(--gap);
+}
+
 .space-x > * + * {
 	--gap: 0.5rem;
 	margin-block-start: var(--gap);
