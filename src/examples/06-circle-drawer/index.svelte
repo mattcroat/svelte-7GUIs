@@ -1,92 +1,86 @@
 <script lang="ts">
 	type Circle = {
+		id: string
 		cx: number
 		cy: number
 		r: number
 	}
+	type Status = 'drawing' | 'editing'
 
+	let status: Status = $state('drawing')
 	let circles = $state<Circle[]>([])
-	let hovered = $state(false)	
-	let selected = $state<number>()
-	let adjusting = $state(false)
-	let undos = $state<Circle[][]>([])
-	let redos = $state<Circle[][]>([])
-
-	$inspect(circles)
+	let selected = $state<Circle>()!
+	let snapshots: Circle[][] = []
+	let history = $state(-1)
 
 	function drawCircle(e: MouseEvent) {
-    if (hovered) return
-
-    if (adjusting) {
-			adjusting = false
-      return
-    }
+		if (status === 'editing') {
+			snapshot()
+			status = 'drawing'
+			return
+		}
 
 		const svgEl = e.target as SVGElement
 		const { left, top } = svgEl.getBoundingClientRect()
-		const cx = +(e.clientX - left).toFixed()
-		const cy = +(e.clientY - top).toFixed()
-		const r = 40
 
-		undos.push($state.snapshot(circles))
-		circles.push({ cx, cy, r })
+		const circle = {
+			id: crypto.randomUUID(),
+			cx: +(e.clientX - left).toFixed(),
+			cy: +(e.clientY - top).toFixed(),
+			r: 40,
+		}
+
+		circles.push(circle)
+		selected = circle
+
+		snapshot()
 	}
 
 	function undo() {
-		const snapshot = undos.pop()!
-		redos.push(circles)
-		circles = snapshot
+		circles = snapshots[--history]
 	}
 
 	function redo() {
-		const snapshot = redos.pop()!
-		circles = snapshot
-		undos.push(snapshot)
+		circles = snapshots[++history]
+	}
+
+	function snapshot() {
+		history++
+		snapshots.push($state.snapshot(circles))
 	}
 </script>
 
 <div class="space-x">
 	<div class="actions flex-center">
-		<button onclick={undo}>Undo</button>
-		<button onclick={redo}>Redo</button>
+		<button onclick={undo} disabled={history === -1}>Undo</button>
+		<button onclick={redo} disabled={history === snapshots.length - 1}> Redo</button>
 	</div>
 
-	{#if adjusting}
+	{#if status === 'editing'}
 		<div class="adjust surface-2 space-x">
-			<span>Adjust diameter of circle at ({circles[selected!].cx}, {circles[selected!].cy})</span>
-			<input type="range" bind:value={circles[selected!].r} />
+			<span>Adjust diameter of circle at ({selected.cx}, {selected.cy})</span>
+			<input type="range" bind:value={selected.r} />
 		</div>
 	{/if}
 
 	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
-	<svg
-		onclick={drawCircle}
-		width="600"
-		height="600"
-		viewBox="0 0 600 600"
-		role="button"
-		tabindex="0"
-	>
-		{#each circles as circle, i}
+	<svg onclick={drawCircle} viewBox="0 0 600 600" role="button" tabindex="0">
+		{#each circles as circle}
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<circle
 				{...circle}
-				fill={selected === i ? '#444' : 'transparent'}
+				fill={selected.id === circle.id ? '#444' : 'transparent'}
 				stroke="#fff"
 				stroke-width="2"
-				onclick={() => {
-					selected = i
+				onclick={(e) => {
+					e.stopPropagation()
+					selected = circle
 				}}
 				oncontextmenu={(e) => {
 					e.preventDefault()
-					selected = i
-					if (!adjusting) {
-						undos.push($state.snapshot(circles))
-					}
-					adjusting = true
+					status = 'editing'
+					selected = circle
 				}}
-				onpointerenter={() => (hovered = true)}
-				onpointerleave={() => (hovered = false)}
 			/>
 		{/each}
 	</svg>
@@ -94,6 +88,8 @@
 
 <style>
 	svg {
+		width: 600px;
+		height: 600px;
 		border: 2px solid #fff;
 	}
 
