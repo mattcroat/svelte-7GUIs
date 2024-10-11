@@ -50,14 +50,14 @@
 	}
 </script>
 
-<div class="space-x">
+<div class="space-y">
 	<div class="actions flex-center">
 		<button onclick={undo} disabled={history === -1}>Undo</button>
 		<button onclick={redo} disabled={history === snapshots.length - 1}> Redo</button>
 	</div>
 
 	{#if status === 'editing'}
-		<div class="adjust surface-2 space-x">
+		<div class="adjust surface-2 space-y">
 			<span>Adjust diameter of circle at ({selected.cx}, {selected.cy})</span>
 			<input type="range" bind:value={selected.r} />
 		</div>

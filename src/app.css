@@ -56,12 +56,12 @@ input[disabled] {
 
 .space-x > * + * {
 	--gap: 0.5rem;
-	margin-block-start: var(--gap);
+	margin-inline-start: var(--gap);
 }
 
 .space-y > * + * {
 	--gap: 0.5rem;
-	margin-inline-start: var(--gap);
+	margin-block-start: var(--gap);
 }
 
 .sr-only {

@@ -73,7 +73,7 @@
 		</label>
 	</div>
 
-	<div class="actions space-y">
+	<div class="actions space-x">
 		<button onclick={createPerson}>Create</button>
 		<button onclick={updatePerson}>Update</button>
 		<button onclick={deletePerson}>Delete</button>
