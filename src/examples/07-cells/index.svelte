@@ -6,18 +6,25 @@
 
 	const rows = 4
 	const cols = 4
-	const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 	const data = $state([
-		[{ value: 'Item' }, { value: 'Price' }, { value: 'Quantity' }, { value: 'Total' }],
-		[{ value: 'Banana' }, { value: '2' }, { value: '4' }, { value: '=MULTIPLY(B2,C2)' }],
+		[{ value: 'Item' }, { value: 'Price (€)' }, { value: 'Amount (kg)' }, { value: 'Total' }],
+		[{ value: '🍌' }, { value: '1' }, { value: '2' }, { value: '=MULTIPLY(B2,C2)' }],
+		[{ value: '🍎' }, { value: '2' }, { value: '2' }, { value: '=MULTIPLY(B3,C3)' }],
+		[{ value: '' }, { value: 'Weight (kg)' }, { value: '=SUM(C2,C3)' }, { value: '' }],
 	])
-	let selected = $state()
-	let editing = $state()
+	let selectedCell = $state()
+	let editedCell = $state()
 
 	function parse(value: string) {
 		if (value.startsWith('=')) {
 			const { operation, cells } = parseFormula(value)
+
+			if (operation === 'SUM') {
+				return sum(cells)
+			}
+
 			if (operation === 'MULTIPLY') {
 				return multiply(cells)
 			}
@@ -37,13 +44,34 @@
 	function cellNameToIndex(value: string) {
 		// A1 -> 00 -> data[0][0]
 		const [a, b] = value.split('')
-		return { row: +b - 1, col: alphabet.indexOf(a) }
+		return { row: +b - 1, col: letters.indexOf(a) }
+	}
+
+	function sum(cells: Cell[]) {
+		return cells.reduce((sum, { row, col }) => sum + +data[row][col].value, 0)
 	}
 
 	function multiply(cells: Cell[]) {
-		return cells.reduce((total, { row, col }) => {
-			return total * +data[row][col].value
-		}, 1)
+		return cells.reduce((product, { row, col }) => product * +data[row][col].value, 1)
+	}
+
+	function update(e: Event) {
+		const { value, parentElement } = e.target as HTMLInputElement
+		const { row, col } = cellNameToIndex(parentElement!.dataset.cell!)
+
+		if (data[row]) {
+			if (data[row][col]) {
+				// update current cell
+				data[row][col].value = value
+			} else {
+				// create new cell
+				data[row][col] = { value }
+			}
+		} else {
+			// create row
+			data[row] = []
+			data[row][col] = { value }
+		}
 	}
 </script>
 
@@ -52,7 +80,7 @@
 		<tr>
 			<th></th>
 			{#each Array(rows) as _, i}
-				<th>{alphabet[i]}</th>
+				<th>{letters[i]}</th>
 			{/each}
 		</tr>
 	</thead>
@@ -62,22 +90,26 @@
 			<tr>
 				<th>{i + 1}</th>
 				{#each Array(cols) as _, j}
-					{@const cell = `${alphabet[j]}${i + 1}`}
+					{@const cell = `${letters[j]}${i + 1}`}
 					{@const value = data[i]?.[j]?.value}
+					{@const parsedValue = value ? parse(value) : ''}
+					{@const selected = selectedCell === cell}
+					{@const editing = editedCell === cell}
 					<td
-						class:selected={selected === cell}
+						class:selected
 						data-cell={cell}
 						onclick={() => {
-							if (selected === cell) return
-							selected = cell
-							editing = null
+							if (selected) return
+							selectedCell = cell
+							editedCell = null
 						}}
-						ondblclick={() => (editing = cell)}
+						ondblclick={() => (editedCell = cell)}
 					>
-						{#if editing === cell}
-							<input type="text" {value} />
+						{#if editing}
+							<!-- svelte-ignore a11y_autofocus -->
+							<input type="text" {value} oninput={update} autofocus />
 						{:else}
-							<span>{value ? parse(value) : null}</span>
+							<span>{parsedValue}</span>
 						{/if}
 					</td>
 				{/each}
@@ -88,6 +120,8 @@
 
 <style>
 	table {
+		width: 480px;
+
 		td {
 			min-width: 100px;
 			height: 40px;
