@@ -1,18 +1,13 @@
 <script lang="ts">
-	type Cell = {
-		row: number
-		col: number
-	}
-
 	const rows = 4
 	const cols = 4
 	const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 	const data = $state([
-		[{ value: 'Item' }, { value: 'Price (€)' }, { value: 'Amount (kg)' }, { value: 'Total' }],
-		[{ value: '🍌' }, { value: '1' }, { value: '2' }, { value: '=MULTIPLY(B2,C2)' }],
+		[{ value: 'Item' }, { value: 'Price' }, { value: 'Amount' }, { value: 'Total' }],
+		[{ value: '🍌' }, { value: '1' }, { value: '4' }, { value: '=MULTIPLY(B2,C2)' }],
 		[{ value: '🍎' }, { value: '2' }, { value: '2' }, { value: '=MULTIPLY(B3,C3)' }],
-		[{ value: '' }, { value: 'Weight (kg)' }, { value: '=SUM(C2,C3)' }, { value: '' }],
+		[{ value: '' }, { value: '' }, { value: 'Total' }, { value: '=SUM(D2,D3)' }],
 	])
 	let selectedCell = $state()
 	let editedCell = $state()
@@ -21,13 +16,21 @@
 		if (value.startsWith('=')) {
 			const { operation, cells } = parseFormula(value)
 
-			if (operation === 'SUM') {
-				return sum(cells)
-			}
+			// we need to calculate the result from a formula
+			const values = cells.map(({ row, col }) => {
+				const value = data[row][col].value
+				if (value.startsWith('=')) {
+					return +parse(value)
+				}
+				return +value
+			})
 
-			if (operation === 'MULTIPLY') {
-				return multiply(cells)
-			}
+			let total = operation === 'MULTIPLY' ? 1 : 0
+			values.forEach((value) => {
+				if (operation === 'SUM') return (total += value)
+				if (operation === 'MULTIPLY') return (total *= value)
+			})
+			return total
 		}
 
 		return value
@@ -45,14 +48,6 @@
 		// A1 -> 00 -> data[0][0]
 		const [a, b] = value.split('')
 		return { row: +b - 1, col: letters.indexOf(a) }
-	}
-
-	function sum(cells: Cell[]) {
-		return cells.reduce((sum, { row, col }) => sum + +data[row][col].value, 0)
-	}
-
-	function multiply(cells: Cell[]) {
-		return cells.reduce((product, { row, col }) => product * +data[row][col].value, 1)
 	}
 
 	function update(e: Event) {
@@ -120,7 +115,7 @@
 
 <style>
 	table {
-		width: 480px;
+		width: 400px;
 
 		td {
 			min-width: 100px;
