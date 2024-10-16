@@ -1,6 +1,6 @@
 <script lang="ts">
-	const rows = 4
-	const cols = 4
+	const rows = 10
+	const cols = 10
 	const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 	const data = $state([
@@ -12,7 +12,7 @@
 	let selectedCell = $state()
 	let editedCell = $state()
 
-	function parse(value: string) {
+	function parse(value: string): string | number {
 		if (value.startsWith('=')) {
 			const { operation, cells } = parseFormula(value)
 
@@ -25,12 +25,14 @@
 				return +value
 			})
 
-			let total = operation === 'MULTIPLY' ? 1 : 0
-			values.forEach((value) => {
-				if (operation === 'SUM') return (total += value)
-				if (operation === 'MULTIPLY') return (total *= value)
-			})
-			return total
+			return values.reduce(
+				(total, value) => {
+					if (operation === 'SUM') return total + value
+					if (operation === 'MULTIPLY') return total * value
+					return total
+				},
+				operation === 'MULTIPLY' ? 1 : 0,
+			)
 		}
 
 		return value
@@ -46,8 +48,8 @@
 
 	function cellNameToIndex(value: string) {
 		// A1 -> 00 -> data[0][0]
-		const [a, b] = value.split('')
-		return { row: +b - 1, col: letters.indexOf(a) }
+		const [col, ...row] = value.split('')
+		return { row: +row.join('') - 1, col: letters.indexOf(col) }
 	}
 
 	function update(e: Event) {

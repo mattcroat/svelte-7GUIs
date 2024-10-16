@@ -100,5 +100,6 @@
 		left: 50%;
 		translate: -50% -50%;
 		padding: 1rem;
+		text-align: center;
 	}
 </style>
