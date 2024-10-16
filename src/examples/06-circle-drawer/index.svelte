@@ -64,7 +64,7 @@
 	{/if}
 
 	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
-	<svg onclick={drawCircle} viewBox="0 0 600 600" role="button" tabindex="0">
+	<svg onclick={drawCircle} viewBox="0 0 600 400" role="button" tabindex="0">
 		{#each circles as circle}
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<circle
@@ -77,6 +77,9 @@
 					selected = circle
 				}}
 				oncontextmenu={(e) => {
+					if (status === 'editing') {
+						snapshot()
+					}
 					e.preventDefault()
 					status = 'editing'
 					selected = circle
@@ -89,7 +92,7 @@
 <style>
 	svg {
 		width: 600px;
-		height: 600px;
+		height: 400px;
 		border: 2px solid var(--gray-0);
 	}
 

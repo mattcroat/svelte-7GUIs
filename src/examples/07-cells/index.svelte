@@ -1,6 +1,6 @@
 <script lang="ts">
-	const rows = 4
-	const cols = 4
+	const rows = 10
+	const cols = 10
 	const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 	const data = $state([
@@ -116,22 +116,26 @@
 </table>
 
 <style>
-	td {
-		width: 160px;
-		height: 40px;
-		font-weight: 600;
-		text-align: left;
+	table {
+		max-width: 800px;
 
-		&.selected {
-			outline: 1px solid var(--highlight);
-			border-radius: var(--radius-1);
-		}
+		td {
+			width: 160px;
+			height: 40px;
+			font-weight: 600;
+			text-align: left;
 
-		input {
-			height: 100%;
-			padding: 0px;
-			background: none;
-			outline: none;
+			&.selected {
+				outline: 1px solid var(--highlight);
+				border-radius: var(--radius-1);
+			}
+
+			input {
+				height: 100%;
+				padding: 0px;
+				background: none;
+				outline: none;
+			}
 		}
 	}
 </style>

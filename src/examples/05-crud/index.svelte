@@ -5,9 +5,9 @@
 	}
 
 	let people = $state([
-		{ name: 'Hans', surname: 'Emil' },
-		{ name: 'Max', surname: 'Mustermann' },
-		{ name: 'Roman', surname: 'Tisch' },
+		{ name: 'Rich', surname: 'Harris' },
+		{ name: 'Ryan', surname: 'Carniato' },
+		{ name: 'Evan', surname: 'You' },
 	])
 
 	let prefix = $state('')
@@ -26,20 +26,20 @@
 
 	function createPerson() {
 		people.push(person)
-		person = { name: '', surname: '' }
+		clearFields()
 	}
 
 	function updatePerson() {
-		const index = people.findIndex(
-			(user) => user.name === selected?.name && user.surname === selected?.surname,
-		)
+		const index = people.indexOf(selected!)
 		people[index] = { name: person.name, surname: person.surname }
 	}
 
 	function deletePerson() {
-		people = people.filter(
-			({ name, surname }) => name !== person.name && surname !== person.surname,
-		)
+		people = people.filter((p) => p.name !== person.name || p.surname !== person.surname)
+		clearFields()
+	}
+
+	function clearFields() {
 		person = { name: '', surname: '' }
 	}
 </script>

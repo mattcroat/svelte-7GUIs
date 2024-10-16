@@ -3,13 +3,12 @@
 	let duration = $state(0)
 
 	$effect(() => {
-		if (duration === 0) return
+		if (!elapsed && !duration) return
 
 		const interval = setInterval(() => {
-			console.log('yo')
 			if (elapsed < duration) {
 				elapsed += 0.1
-			} else if (elapsed > duration) {
+			} else {
 				clearInterval(interval)
 			}
 		}, 100)
