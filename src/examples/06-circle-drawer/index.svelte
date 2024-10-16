@@ -90,7 +90,7 @@
 	svg {
 		width: 600px;
 		height: 600px;
-		border: 2px solid #fff;
+		border: 2px solid var(--gray-0);
 	}
 
 	.adjust {

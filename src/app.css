@@ -8,6 +8,7 @@
 	--text-1: var(--gray-1);
 	--surface-1: var(--gray-10);
 	--surface-2: var(--gray-9);
+	--highlight: aqua;
 }
 
 body {
