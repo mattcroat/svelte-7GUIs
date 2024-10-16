@@ -1,8 +1,7 @@
 @import 'open-props/style';
 @import 'open-props/normalize';
 @import 'open-props/buttons';
-
-@import url(https://fonts.bunny.net/css?family=manrope:400,600,800);
+@import '@fontsource-variable/manrope';
 
 :root {
 	--background-clr: var(--gray-10);
@@ -14,7 +13,7 @@
 body {
 	display: grid;
 	place-content: center;
-	font-family: 'Manrope', sans-serif;
+	font-family: 'Manrope Variable', sans-serif;
 	background-color: var(--surface-1);
 }
 
@@ -55,12 +54,12 @@ input[disabled] {
 }
 
 .space-x > * + * {
-	--gap: 0.5rem;
+	--gap: 1rem;
 	margin-inline-start: var(--gap);
 }
 
 .space-y > * + * {
-	--gap: 0.5rem;
+	--gap: 1rem;
 	margin-block-start: var(--gap);
 }
 
