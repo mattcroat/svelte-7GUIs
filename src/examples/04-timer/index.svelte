@@ -3,34 +3,31 @@
 	let duration = $state(0)
 
 	$effect(() => {
-		if (!elapsed && !duration) return
+		if (!duration) return
 
 		const interval = setInterval(() => {
-			if (elapsed < duration) {
-				elapsed += 0.1
-			} else {
-				clearInterval(interval)
-			}
+			elapsed += 0.1
+			if (elapsed > duration) clearInterval(interval)
 		}, 100)
 
 		return () => clearInterval(interval)
 	})
 </script>
 
-<div>
-	<label>
-		<span>Elapsed time:</span>
-		<progress max={duration} value={elapsed}></progress>
-	</label>
+<div class="grid-gap">
+	<div>
+		<label>
+			<span>Elapsed time:</span>
+			<progress max={duration} value={elapsed}></progress>
+		</label>
 
-	<p>{elapsed.toFixed(1)}s</p>
+		<div>{elapsed.toFixed(1)}s</div>
+	</div>
 
 	<label>
 		<span>Duration:</span>
 		<input type="range" bind:value={duration} min="1" max="20" />
 	</label>
 
-	<div>
-		<button onclick={() => (elapsed = 0)}>Reset</button>
-	</div>
+	<button onclick={() => (elapsed = 0)}>Reset</button>
 </div>
