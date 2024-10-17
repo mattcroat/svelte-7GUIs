@@ -1,15 +1,26 @@
 <script lang="ts">
 	let elapsed = $state(0)
-	let duration = $state(0)
+	let duration = $state(5)
+	let interval: number
+
+	function start() {
+		interval = setInterval(() => {
+			elapsed += 0.1
+			if (elapsed > duration) {
+				elapsed = duration
+				clearInterval(interval)
+			}
+		}, 100)
+	}
+
+	function reset() {
+		elapsed = 0
+		start()
+	}
 
 	$effect(() => {
 		if (!duration) return
-
-		const interval = setInterval(() => {
-			elapsed += 0.1
-			if (elapsed > duration) clearInterval(interval)
-		}, 100)
-
+		start()
 		return () => clearInterval(interval)
 	})
 </script>
@@ -26,8 +37,8 @@
 
 	<label>
 		<span>Duration:</span>
-		<input type="range" bind:value={duration} min="1" max="20" />
+		<input type="range" bind:value={duration} min="1" max="10" />
 	</label>
 
-	<button onclick={() => (elapsed = 0)}>Reset</button>
+	<button onclick={reset}>Reset</button>
 </div>
