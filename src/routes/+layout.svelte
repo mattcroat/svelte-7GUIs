@@ -1,8 +1,7 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition'
   import { page } from '$app/stores'
   import '../app.css'
-
-  let { children } = $props()
 
   const examples = [
     { label: 'Counter', path: '01-counter' },
@@ -13,35 +12,14 @@
     { label: 'Circle drawer', path: '06-circle-drawer' },
     { label: 'Cells', path: '07-cells' },
   ]
+
+  let { children } = $props()
+  let open = $state(false)
 </script>
 
 <svelte:head>
   <title>7GUIs</title>
 </svelte:head>
-
-<div class="container">
-  <aside>
-    <div class="nav-container space-y">
-      <div class="title">
-        {@render svelte()}
-        <h2>7GUIs</h2>
-      </div>
-
-      <nav class="grid-gap">
-        {#each examples as { label, path }, i}
-        {@const current = $page.params.example === path ? 'page' : undefined}
-          <a href="/examples/{path}" aria-current={current}>
-            {i + 1}. {label}
-          </a>
-        {/each}
-      </nav>
-    </div>
-  </aside>
-
-  <main>
-    {@render children()}
-  </main>
-</div>
 
 {#snippet svelte()}
   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 107 128">
@@ -51,23 +29,67 @@
   </svg>
 {/snippet}
 
+{#snippet arrow()}
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class:rotate={open} style="transition: rotate 0.3s">
+    <path d="m9 18 6-6-6-6"/>
+  </svg>
+{/snippet}
+
+<div class="container" class:grid={open}>
+  <button onclick={() => open = !open} class="menu">
+    {@render arrow()}
+  </button>
+
+  {#if open}    
+    <aside transition:fly={{ x: '-400px' }}>
+      <div class="nav-container space-y">
+        <div class="title">
+          {@render svelte()}
+          <h2>7GUIs</h2>
+        </div>
+
+        <nav class="grid-gap">
+          {#each examples as { label, path }, i}
+          {@const current = $page.params.example === path ? 'page' : undefined}
+            <a href="/examples/{path}" aria-current={current}>
+              {i + 1}. {label}
+            </a>
+          {/each}
+        </nav>
+      </div>
+    </aside>
+  {/if}
+
+  <main>
+    {@render children()}
+  </main>
+</div>
+
 <style>
   .container {
     height: 100%;
-    display: grid;
-    grid-template-columns: 280px 1fr;
+
+    .menu {
+      padding: 0px;
+      background: none;
+      border: none;
+      box-shadow: none;
+      position: absolute;
+      left: var(--size-7);
+      bottom: var(--size-7);
+      z-index: 10;
+    }
     
     aside {
-      /* position: absolute;
+      width: 280px;
+      position: absolute;
       top: 0px;
+      bottom: 0px;
       left: 0px;
-      height: 100%;
-      padding: 0px var(--size-3); */
       border-right: 1px solid var(--gray-8);
-      /* box-shadow: var(--shadow-6); */
-      /* backdrop-filter: contrast(98%) blur(20px); */
-      /* translate: 0px 0px; */
-      
+      box-shadow: var(--shadow-6);
+      backdrop-filter: contrast(98%) blur(20px);
+
       .nav-container {
         .title {
           display: flex;
@@ -81,11 +103,6 @@
           padding-inline-start: var(--size-7);
         }
       }
-    }
-
-    main {
-      display: grid;
-      place-content: center;
     }
 
     a {
@@ -102,5 +119,9 @@
         color: var(--highlight);
       }
     }
+  }
+
+  .rotate {
+    rotate: -0.5turn;
   }
 </style>

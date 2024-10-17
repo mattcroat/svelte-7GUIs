@@ -18,6 +18,8 @@ body {
 }
 
 body {
+	display: grid;
+	place-content: center;
 	font-family: 'Manrope Variable', sans-serif;
 	background-color: var(--surface-1);
 }
