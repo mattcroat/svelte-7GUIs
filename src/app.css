@@ -9,6 +9,7 @@
 	--surface-1: var(--gray-10);
 	--surface-2: var(--gray-9);
 	--highlight: #ff3f20;
+	accent-color: var(--highlight);
 }
 
 html,
@@ -30,6 +31,10 @@ select,
 input {
 	width: 100%;
 	background-color: var(--surface-3);
+}
+
+option:checked {
+	background: linear-gradient(0deg, var(--highlight) 0%, var(--highlight) 100%);
 }
 
 input[disabled] {
